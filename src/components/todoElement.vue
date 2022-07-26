@@ -1,5 +1,5 @@
 <template>
-  <div id="todo">
+  <div id="todo" :style="{ 'background-color': todo.completed ? 'rgba(0, 128, 0, 0.144)' : 'rgba(128, 0, 0, 0.144)' }">
     <h3
       :style="[{ color: (todo.completed ? 'green' : 'red') }, { 'text-decoration': (todo.completed ? 'line-through' : 'none') }]">
       {{

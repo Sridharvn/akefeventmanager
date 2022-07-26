@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="todosPage">
     <h1>Todos</h1>
     <div id="addTodo">
       <input type="text" v-model="newTodo" placeholder="Add a new todo" v-on:keyup.enter="addTodo" id="newTodoInput" />
@@ -122,6 +122,10 @@ button {
   align-items: center;
   justify-content: center;
   margin: 20px;
+}
+
+#todosPage {
+  background-color: $background;
 }
 
 // #newTodoInput {

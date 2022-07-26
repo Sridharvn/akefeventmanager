@@ -3,7 +3,7 @@
     <div class="logo">
       <q-img src="./../assets/AKEF-LOGO-BLACK-SQR.png" ratio="1"></q-img>
     </div>
-    <q-page-container>
+    <q-page-container style="background-color:background">
       <router-view />
     </q-page-container>
 
@@ -28,7 +28,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  // background-color: $negative;
+  background-color: $background;
 }
 
 #footerText {

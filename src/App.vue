@@ -1,5 +1,5 @@
 <template>
-  <router-view />
+  <router-view id="bg" />
 </template>
 
 <script>
@@ -9,3 +9,8 @@ export default defineComponent({
   name: 'App'
 })
 </script>
+<style lang="scss" scoped>
+#bg {
+  background-color: $background;
+}
+</style>
