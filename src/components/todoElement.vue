@@ -1,11 +1,18 @@
 <template>
   <div id="todo">
-    <h3>{{ todo.title }}</h3>
-    <!-- <h5>{{ todo.completed }}</h5> -->
+    <h3
+      :style="[{ color: (todo.completed ? 'green' : 'red') }, { 'text-decoration': (todo.completed ? 'line-through' : 'none') }]">
+      {{
+          todo.title
+      }}</h3>
+    <button @click="$emit('removeTodo')" v-if="todo.completed" id="remove">Remove</button>
     <button @click="$emit('completeTodo')" id="completeButton">
-      {{ todo.completed ? 'Completed' : 'Not Completed' }}
+      <!-- {{ todo.completed ? 'Completed' : 'Not Completed' }} -->
+      <!-- green tick if completed, and red cross if not completed -->
+      <span v-if="todo.completed" id="complete">&#10004; Completed</span>
+      <span v-else id="incomplete">Not Completed &#10006;</span>
     </button>
-    <button @click="$emit('removeTodo')">Remove</button>
+
   </div>
 </template>
 <script setup>
@@ -25,15 +32,6 @@ const props = defineProps({
 const emit = defineEmits([
   'removeTodo', 'completeTodo'
 ]);
-// check if todo is completed and change the button color accordingly
-watch(props.completed, (newValue) => {
-  if (newValue) {
-    document.getElementById('completeButton').style.backgroundColor = 'green';
-  }
-  else {
-    document.getElementById('completeButton').style.backgroundColor = 'red';
-  }
-});
 </script>
 <style lang="scss" scoped>
 #todo {
@@ -55,5 +53,31 @@ button {
   background-color: $background;
   border: 1px solid $secondary;
   color: $textcolor;
+}
+
+button #complete {
+  color: $positive;
+}
+
+button #incomplete {
+  color: $negative;
+}
+
+#remove {
+  color: $negative;
+}
+
+@media screen and (max-width: 600px) {
+  // #todo {
+  //   flex-direction: column;
+  // }
+
+  h3 {
+    font-size: small;
+  }
+
+  button {
+    font-size: small;
+  }
 }
 </style>

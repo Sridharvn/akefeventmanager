@@ -34,7 +34,7 @@
 #footerText {
   text-align: center;
   font-size: 12px;
-  color: $textcolor;
+  color: $textcoloralternate;
   background-color: $dark;
 }
 </style>

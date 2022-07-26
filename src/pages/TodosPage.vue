@@ -100,7 +100,7 @@ h1 {
 }
 
 input {
-  width: 80%;
+  width: 95%;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid $secondary;
