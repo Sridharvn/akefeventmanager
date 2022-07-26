@@ -6,14 +6,18 @@
       <span><button @click="addTodo" id="addButton">Add</button></span>
     </div>
     <div v-for="(todo, index) in todoList.slice().reverse()" :key="todo" id="todoList">
-      <TodoElement :todo="todo" @completeTodo="completeTodo(index)" @removeTodo="removetodo(index)" />
+      <TodoElement :todo="todo" @completeTodo="completeTodo(index)" @removeTodo="removetodo(index)" :key="todo.id" />
     </div>
   </div>
 </template>
 <script setup>
-import { watch } from 'vue';
+import { onMounted, watch } from 'vue';
 import TodoElement from '../components/todoElement.vue'
 import { useQuasar } from 'quasar';
+import { collection, getDocs } from "firebase/firestore";
+import { db } from '../firebase';
+
+
 const { reactive, ref } = require("@vue/reactivity");
 
 
@@ -21,21 +25,21 @@ const { reactive, ref } = require("@vue/reactivity");
 const $q = useQuasar();
 const newTodo = ref('');
 const todoList = reactive([
-  {
-    id: 1,
-    title: "Learn Vue",
-    completed: false
-  },
-  {
-    id: 2,
-    title: "Learn Vuex",
-    completed: false
-  },
-  {
-    id: 3,
-    title: "Learn Vue Router",
-    completed: false
-  }
+  // {
+  //   id: 1,
+  //   title: "Learn Vue",
+  //   completed: false
+  // },
+  // {
+  //   id: 2,
+  //   title: "Learn Vuex",
+  //   completed: false
+  // },
+  // {
+  //   id: 3,
+  //   title: "Learn Vue Router",
+  //   completed: false
+  // }
 ]);
 
 function addTodo() {
@@ -92,6 +96,26 @@ function removetodo(index) {
     })
   }
 }
+
+// Get todos on Mounted
+onMounted(async () => {
+  const querySnapshot = await getDocs(collection(db, "todos"));
+  let allTodos = [];
+  querySnapshot.forEach((doc) => {
+    let fetchedTodo = {
+      id: doc.id,
+      title: doc.data().title,
+      completed: doc.data().completed
+    }
+    allTodos.push(fetchedTodo);
+    console.log(doc.id, " => ", doc.data());
+  });
+  console.log(allTodos);
+  todoList.value = allTodos;
+  console.log(todoList);
+})
+
+
 </script>
 <style lang="scss" scoped>
 h1 {
