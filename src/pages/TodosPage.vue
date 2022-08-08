@@ -16,13 +16,9 @@ import { onMounted, watch } from 'vue';
 import TodoElement from '../components/todoElement.vue'
 import { date, useQuasar } from 'quasar';
 import { collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, query, orderBy, limit } from "firebase/firestore";
-import { db } from '../firebase';
-
-
+import { db, app } from '../firebase';
+import { getAuth } from 'firebase/auth';
 const { reactive, ref } = require("@vue/reactivity");
-
-
-
 const $q = useQuasar();
 const newTodo = ref('');
 const todoList = ref([]);
@@ -54,6 +50,7 @@ async function addTodo() {
   });
   newTodo.value = '';
 }
+console.log(getAuth(app).currentUser);
 async function completeTodo(id) {
   // const trueIndex = todoList.length - index - 1;
   // todoList[trueIndex].completed = !todoList[trueIndex].completed;
@@ -92,7 +89,6 @@ function removetodo(id) {
   // }
   deleteDoc(doc(db, "todos", id));
 }
-
 // Get todos on Mounted
 onMounted(async () => {
   // const querySnapshot = await getDocs(collection(db, "todos"));
@@ -106,7 +102,6 @@ onMounted(async () => {
   //   allTodos.push(fetchedTodo);
   // });
   // todoList.value = allTodos;
-
   onSnapshot(todoscollectionquery, (querySnapshot) => {
     const allTodos = [];
     querySnapshot.forEach((doc) => {
@@ -120,10 +115,6 @@ onMounted(async () => {
     todoList.value = allTodos;
   });
 });
-
-
-
-
 </script>
 <style lang="scss" scoped>
 h1 {
