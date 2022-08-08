@@ -1,0 +1,7 @@
+{
+  "appId": "com.akef.eventmanagerapp",
+  "appName": "AKEF Event Manager",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}

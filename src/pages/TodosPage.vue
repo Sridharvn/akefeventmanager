@@ -6,8 +6,9 @@
       <span><button @click="addTodo" id="addButton">Add</button></span>
     </div>
     <div v-for="(todo) in todoList.slice().reverse()" :key="todo" id="todoList">
+      <!-- {{ todo }} -->
       <TodoElement :todo="todo" @completeTodo="completeTodo(todo.id)" @removeTodo="removetodo(todo.id)"
-        :key="todo.id" />
+        :currentUser="currentUser" :key="todo.id" />
     </div>
   </div>
 </template>
@@ -22,94 +23,89 @@ const { reactive, ref } = require("@vue/reactivity");
 const $q = useQuasar();
 const newTodo = ref('');
 const todoList = ref([]);
+const auth = getAuth(app);
+var currentUser = ref('');
 const todosref = collection(db, "todos");
-const todoscollectionquery = query(todosref, orderBy("date", "asc"));
+const todoscollectionquery = query(todosref, orderBy("time", "asc"));
 async function addTodo() {
-  // if (newTodo.value.length > 0) {
-  //   todoList.push({
-  //     id: todoList.length + 1,
-  //     title: newTodo.value,
-  //     completed: false
-  //   });
-  //   newTodo.value = '';
-  //   $q.notify({
-  //     message: 'Task added',
-  //     color: 'secondary'
-  //   })
-  // }
-  // else {
-  //   $q.notify({
-  //     message: 'Task cannot be empty',
-  //     color: 'negative'
-  //   })
-  // }
-  await addDoc(todosref, {
-    title: newTodo.value,
-    completed: false,
-    date: Date.now()
-  });
+  if (newTodo.value.length > 0) {
+    await addDoc(todosref, {
+      title: newTodo.value,
+      completed: false,
+      time: Date.now(),
+      assignee: auth.currentUser.displayName
+    });
+    $q.notify({
+      message: 'Task added',
+      color: 'secondary'
+    })
+  }
+  else {
+    $q.notify({
+      message: 'Task cannot be empty',
+      color: 'negative'
+    })
+  }
+
   newTodo.value = '';
 }
-console.log(getAuth(app).currentUser);
 async function completeTodo(id) {
   // const trueIndex = todoList.length - index - 1;
   // todoList[trueIndex].completed = !todoList[trueIndex].completed;
-  // if (todoList[trueIndex].completed) {
-  //   $q.notify({
-  //     message: 'Task completed',
-  //     color: 'positive'
-  //   })
-  // }
-  // else {
-  //   $q.notify({
-  //     message: 'Task not completed',
-  //     color: 'negative'
-  //   })
-  // }
   const index = todoList.value.findIndex(todo => todo.id === id);
+  var completedUser = '';
+  var completedTime = '';
+  if (!todoList.value[index].completed) {
+    completedUser = auth.currentUser.displayName;
+    completedTime = Date.now();
+  } else {
+    completedUser = '';
+    completedTime = '';
+  }
   await updateDoc(doc(db, "todos", id), {
-    completed: !todoList.value[index].completed
+    completed: !todoList.value[index].completed,
+    completedBy: completedUser,
+    completedTime: completedTime
   });
+  if (todoList.value[index].completed) {
+    $q.notify({
+      message: 'Task completed',
+      color: 'positive'
+    })
+  }
+  else {
+    $q.notify({
+      message: 'Task not completed',
+      color: 'negative'
+    })
+  }
 }
 function removetodo(id) {
-  // const trueIndex = todoList.length - index - 1;
-  // // (todoList[trueIndex]);
-  // if (!todoList[trueIndex].completed) {
-  //   $q.notify({
-  //     message: 'Incomplete task cannot be removed',
-  //     color: 'negative'
-  //   })
-  // }
-  // else {
-  //   todoList.splice(trueIndex, 1);
-  //   $q.notify({
-  //     message: 'Task removed',
-  //     color: 'negative'
-  //   })
-  // }
+  const index = todoList.value.findIndex(todo => todo.id === id);
   deleteDoc(doc(db, "todos", id));
+  $q.notify({
+    message: 'Task removed',
+    color: 'negative'
+  })
 }
 // Get todos on Mounted
 onMounted(async () => {
-  // const querySnapshot = await getDocs(collection(db, "todos"));
-  // let allTodos = [];
-  // querySnapshot.forEach((doc) => {
-  //   let fetchedTodo = {
-  //     id: doc.id,
-  //     title: doc.data().title,
-  //     completed: doc.data().completed
-  //   }
-  //   allTodos.push(fetchedTodo);
-  // });
-  // todoList.value = allTodos;
   onSnapshot(todoscollectionquery, (querySnapshot) => {
+    const auth = getAuth(app);
+    currentUser.value = auth.currentUser.displayName;
+    // console.log(currentUser);
     const allTodos = [];
     querySnapshot.forEach((doc) => {
       let fetchedTodo = {
         id: doc.id,
         title: doc.data().title,
-        completed: doc.data().completed
+        completed: doc.data().completed,
+        time: doc.data().time,
+        assignee: doc.data().assignee,
+        completedBy: doc.data().completedBy,
+        completedTime: doc.data().completedTime
       }
+      // console.log(fetchedTodo);
       allTodos.push(fetchedTodo);
     });
     todoList.value = allTodos;
