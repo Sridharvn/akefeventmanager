@@ -33,7 +33,7 @@ async function addTodo() {
       title: newTodo.value,
       completed: false,
       time: Date.now(),
-      assignee: auth.currentUser.displayName
+      // assignee: auth.currentUser.displayName
     });
     $q.notify({
       message: 'Task added',
@@ -53,18 +53,18 @@ async function completeTodo(id) {
   // const trueIndex = todoList.length - index - 1;
   // todoList[trueIndex].completed = !todoList[trueIndex].completed;
   const index = todoList.value.findIndex(todo => todo.id === id);
-  var completedUser = '';
+  // var completedUser = '';
   var completedTime = '';
   if (!todoList.value[index].completed) {
-    completedUser = auth.currentUser.displayName;
+    // completedUser = auth.currentUser.displayName;
     completedTime = Date.now();
   } else {
-    completedUser = '';
+    // completedUser = '';
     completedTime = '';
   }
   await updateDoc(doc(db, "todos", id), {
     completed: !todoList.value[index].completed,
-    completedBy: completedUser,
+    // completedBy: completedUser,
     completedTime: completedTime
   });
   if (todoList.value[index].completed) {
@@ -91,8 +91,8 @@ function removetodo(id) {
 // Get todos on Mounted
 onMounted(async () => {
   onSnapshot(todoscollectionquery, (querySnapshot) => {
-    const auth = getAuth(app);
-    currentUser.value = auth.currentUser.displayName;
+    // const auth = getAuth(app);
+    // currentUser.value = auth.currentUser.displayName;
     // console.log(currentUser);
     const allTodos = [];
     querySnapshot.forEach((doc) => {
@@ -101,8 +101,8 @@ onMounted(async () => {
         title: doc.data().title,
         completed: doc.data().completed,
         time: doc.data().time,
-        assignee: doc.data().assignee,
-        completedBy: doc.data().completedBy,
+        // assignee: doc.data().assignee,
+        // completedBy: doc.data().completedBy,
         completedTime: doc.data().completedTime
       }
       // console.log(fetchedTodo);

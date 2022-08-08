@@ -8,8 +8,9 @@
             todo.title
         }}</h3>
 
-      <button @click="$emit('removeTodo')" v-if="todo.completed && todo.assignee === currentUser"
-        id="remove">Remove</button>
+      <button @click="$emit('removeTodo')" v-if="todo.completed" id="remove">Remove</button>
+      <!-- <button @click="$emit('removeTodo')" v-if="todo.completed && todo.assignee === currentUser"
+        id="remove">Remove</button> -->
       <button @click="$emit('completeTodo')" id="completeButton">
         <!-- {{ todo.completed ? 'Completed' : 'Not Completed' }} -->
         <!-- green tick if completed, and red cross if not completed -->
@@ -22,14 +23,14 @@
       <div class="full-width row wrap justify-center items-center content-center">
         <q-space>
         </q-space>
-        Assignee : {{ todo.assignee }}
+        <!-- Assignee : {{ todo.assignee }} -->
         <q-space></q-space>
         <div v-if="todo.time">Time : {{ assignedTime }}</div>
         <q-space />
-      </div>
-      <div class="full-width row wrap justify-center items-center content-center">
+        <!-- </div>
+      <div class="full-width row wrap justify-center items-center content-center"> -->
         <q-space />
-        <div v-if="todo.completedBy">Completed By : {{ todo.completedBy }}</div>
+        <!-- <div v-if="todo.completedBy">Completed By : {{ todo.completedBy }}</div> -->
         <q-space></q-space>
         <div v-if="todo.completedTime">Completed Time : {{ completedTime }}</div>
         <q-space />
