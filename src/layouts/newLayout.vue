@@ -1,10 +1,10 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <div class="logo">
-      <q-space />
+      <!-- <q-space /> -->
       <q-img src="./../assets/AKEF-LOGO-BLACK-SQR.png" ratio="1"></q-img>
-      <q-space />
-      <q-btn @click="signOutofApp" style="margin-right:10px"> Sign Out </q-btn>
+      <!-- <q-space />
+      <q-btn @click="signOutofApp" style="margin-right:10px"> Sign Out </q-btn> -->
     </div>
     <q-page-container style="background-color:background">
       <router-view />
